@@ -8,15 +8,11 @@ function lightPasses(x, y){
     if(key in map) {return (map[key] === 0);}
     return false;
 };  
-//haritada gösterme
-function show(param) {
-    display.draw(param.x, param.y, param.avatar)
-};
 
 //harita draw
 function drawAll () {
-    show(portal);
     fovCompute(player);
+    display.draw(portal);
 }
 //geçilebilir olma testi
 function isPassible(x, y){
@@ -53,18 +49,21 @@ new ROT.Map.DividedMaze(displayOptions.width, displayOptions.height).create(func
 //======================================================================================================
 
 //haritadaki karakter sınıfı
-let character = function (avatar) {
+let character = function (avatar, fg, bg) {
     this.x;
     this.y;
-    this.avatar = avatar;
+    this.ch = avatar;
+    this.fg = fg;
+    this.bg = bg;
 };
 
-let player = new character("@");
-let portal = new character("#");
+let player = new character("@","#faebd7", "#f0f8ff");
+let portal = new character("#","#f0f8ff", "#faebd7");
+
 //player ve portal'ı rastgele noktaya atma
 Object.assign(player, freeCells[getRandom(freeCells)]);
 Object.assign(portal, freeCells[getRandom(freeCells)]);
-Object.assign
+
 //event listener ekleme
 document.addEventListener('keydown', (event) => {
     let code = event.code;
@@ -86,10 +85,10 @@ let fov = new ROT.FOV.PreciseShadowcasting(lightPasses);
 //output callback
 function fovCompute(char) {
         fov.compute(char.x, char.y, 15, function(x, y, r, visibility) {
-        let ch = (r ? "" : char.avatar);
+        let ch = (r ? "" : char.ch);
         let color = (map[x+","+y] ? "#aa0":"#660" );
         display.draw(x, y, ch, "#fff", color);
     } );
 };
 
-
+drawAll();
