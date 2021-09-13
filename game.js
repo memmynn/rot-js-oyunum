@@ -8,24 +8,28 @@ function lightPasses(x, y){
     if(key in map) {return (map[key] === 0);}
     return false;
 };  
+//karakter draw
+function charDraw(char) {
+    display.draw(char.x, char.y, char.ch, char.fg, char.bg)    
+}
 
 //harita draw
 function drawAll () {
     fovCompute(player);
-    display.draw(portal);
+    charDraw(portal);
 }
 //geçilebilir olma testi
 function isPassible(x, y){
     let key = x+","+y;
-    if(key in map && map[key] === 0) {return true};
+    if(map[key] === 0) {return true};
     return false;
 };
 
 
 //========================================HARİTA==============================================================
 let displayOptions = {
-    width: 55,
-    height: 20,
+    width: 10,
+    height: 5,
     fontSize: 18,
     fontFamily: "monospace",
     fg: "#000000",//"#F0FFFF"
@@ -49,16 +53,16 @@ new ROT.Map.DividedMaze(displayOptions.width, displayOptions.height).create(func
 //======================================================================================================
 
 //haritadaki karakter sınıfı
-let character = function (avatar, fg, bg) {
-    this.x;
-    this.y;
-    this.ch = avatar;
-    this.fg = fg;
-    this.bg = bg;
+let character = function (ch, fg, bg) {
+    this.x = null, 
+    this.y = null, 
+    this.ch = ch, 
+    this.fg = fg, 
+    this.bg = bg
 };
 
 let player = new character("@","#faebd7", "#f0f8ff");
-let portal = new character("#","#f0f8ff", "#faebd7");
+let portal = new character("#","white", "green");
 
 //player ve portal'ı rastgele noktaya atma
 Object.assign(player, freeCells[getRandom(freeCells)]);
@@ -84,9 +88,9 @@ let fov = new ROT.FOV.PreciseShadowcasting(lightPasses);
 
 //output callback
 function fovCompute(char) {
-        fov.compute(char.x, char.y, 15, function(x, y, r, visibility) {
-        let ch = (r ? "" : char.ch);
-        let color = (map[x+","+y] ? "#aa0":"#660" );
+        fov.compute(char.x, char.y, 5, function(x, y, r, visibility) {
+        let ch = (r ? null : char.ch);
+        let color = (map[x+","+y] ? "#aa0":null );
         display.draw(x, y, ch, "#fff", color);
     } );
 };
