@@ -28,12 +28,12 @@ function isPassible(x, y){
 
 //========================================HARİTA==============================================================
 let displayOptions = {
-    width: 10,
-    height: 5,
+    width: 15,
+    height: 10,
     fontSize: 18,
     fontFamily: "monospace",
-    fg: "#000000",//"#F0FFFF"
-    bg: "#000000",
+    //fg: "#CB730B",//"#F0FFFF"
+    //bg: "#000000",
     spacing: 1,
     layout: "rect",
 };
@@ -48,7 +48,7 @@ let freeCells = [];
 new ROT.Map.DividedMaze(displayOptions.width, displayOptions.height).create(function(x, y, type) {
     map[x+","+y] = type;
     if(type === 0) {freeCells.push({"x":x, "y":y})}
-    display.DEBUG(x, y, type);
+    //display.DEBUG(x, y, type);
 });
 //======================================================================================================
 
@@ -89,8 +89,8 @@ let fov = new ROT.FOV.PreciseShadowcasting(lightPasses);
 //output callback
 function fovCompute(char) {
         fov.compute(char.x, char.y, 5, function(x, y, r, visibility) {
-        let ch = (r ? null : char.ch);
-        let color = (map[x+","+y] ? "#aa0":null );
+        let ch = (r ? (map[x+","+y] === 0 ? "." : "*") : char.ch);
+        let color = map[x+","+y].bg;
         display.draw(x, y, ch, "#fff", color);
     } );
 };
