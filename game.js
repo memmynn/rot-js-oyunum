@@ -1,4 +1,6 @@
-//==============================FONKSİYONLAR==================//
+//=============================OYUN==========================
+function game () {
+    //==============================FONKSİYONLAR==================//
 //array'den random item alma
 function getRandom(array){
     return Math.floor(Math.random()*array.length)
@@ -11,23 +13,20 @@ function lightPasses(x, y){
     return false;
 };  
 
-//karakter draw
-function charDraw(char) {
-    display.draw(char.x, char.y, char.ch, char.fg, char.bg)    
-};
-
 //geçilebilir olma testi
 function isPassible(x, y) {
     let key = x+","+y;
     if(map[key].isPassible) {return true};
     return false;
 };
+
 //haritadaki presence'ı temizle
 function charClear() {
     for (let cha in characters) {
         delete map[characters[cha].x+","+characters[cha].y].presence;
     };
 };
+
 //haritaya character ekle
 function charAdd() {
     for (let cha in characters) {
@@ -35,17 +34,24 @@ function charAdd() {
     };
 };
 
-//harita draw
-function drawAll () {
-    fovCompute(player);
-};
-
 //oyun işle
 function init() {
     charAdd();
-    drawAll();
+    fovCompute(player);
 };
+//================================CLASSES===================================================
+//haritadaki karakter sınıfı
+let character = function (x, y, ch, fg, bg) {
+    this.x = x || null, 
+    this.y = y || null, 
+    this.ch = ch || null, 
+    this.fg = fg || null, 
+    this.bg = bg || null,
 
+    //karakterleri "characters" array'e ekleme
+    characters.push(this);
+};
+//================================================OYUN BAŞLATMA========================================
 
 //========================================HARİTA==============================================================
 let displayOptions = {
@@ -68,30 +74,19 @@ let freeCells = [];
 let characters = [];
 
 new ROT.Map.DividedMaze(displayOptions.width, displayOptions.height).create(function(x, y, type) {
-    map[x+","+y] = (type === 0 ? {ch:".", bg: "grey", isPassible: true}:{ch:"#", bg: "black"}); //haritaya "type"'a göre "ch" verme
+    map[x+","+y] = (type === 0 ? {ch:".", bg: "grey", fg: "white", isPassible: true}:{ch:"#", bg: "black"}); //haritaya "type"'a göre "ch" verme
     if(type === 0) {freeCells.push({"x":x, "y":y})}
     //display.DEBUG(x, y);
 });
 //======================================================================================================
 
-//haritadaki karakter sınıfı
-let character = function (ch, fg, bg) {
-    this.x = null, 
-    this.y = null, 
-    this.ch = ch, 
-    this.fg = fg, 
-    this.bg = bg
-};
-
-let player = new character("@","yellow", "red");
-let portal = new character("€","white", "green");
+//================================karakterler======================
+let player = new character(null, null, "@","yellow", "red");
+let portal = new character(null, null, "€","white", "green");
 
 //karakterleri rastgele noktaya atma
 Object.assign(player, freeCells[getRandom(freeCells)]);
 Object.assign(portal, freeCells[getRandom(freeCells)]);
-
-//karakterleri "characters" array'e ekleme
-characters.push(player, portal);
 
 //event listener ekleme
 document.addEventListener('keydown', (event) => {
@@ -121,5 +116,9 @@ function fovCompute(char) {
         display.draw(x, y, ch, fg, color);
     } );
 };
+return {init}
+};
 
-init();
+let Game = new game();
+
+Game.init();
