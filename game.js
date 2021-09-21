@@ -1,11 +1,13 @@
-//=============================OYUN==========================
-let Game = function(){
-//==============================FONKSİYONLAR==================//
 //array'den random item alma
 
     function getRandom(array){
         return Math.floor(Math.random()*array.length)
     };
+
+
+//=============================OYUN==========================
+let Game = function(){
+//==============================FONKSİYONLAR==================//
 
     //input callback
     function lightPasses(x, y){
@@ -37,7 +39,6 @@ let Game = function(){
 
     //oyun işle
     function init() {
-        charClear();
         charAdd();
         fovCompute(player);
     };
@@ -61,15 +62,21 @@ let Game = function(){
 
     document.body.append(display.getContainer());
 
-    let map = [];
     let freeCells = [];
     let characters = [];
+    let rand = function () {
+        return Math.round(Math.random())
+    };
 
-    new ROT.Map.DividedMaze(displayOptions.width, displayOptions.height).create(function(x, y, type) {
-        map[x+","+y] = (type === 0 ? {ch:".", bg: "grey", fg: "white", isPassible: true}:{ch:"#", bg: "black"}); //haritaya "type"'a göre "ch" verme
-        if(type === 0) {freeCells.push({"x":x, "y":y})}
+    let map = new ROT.Map.Cellular(displayOptions.width, displayOptions.height).randomize(0.2);
+    map.connect();
+    map.create(function(x, y, type) {
+        map[x+","+y] = (type === 0 ? {ch:".", bg: "grey", fg: "white", isPassible: true}:{ch:"#", bg: "black"}); //haritaya "cell"'a göre "ch" verme
+        if(type === 0) {freeCells.push({"x":x, "y":y})};
         //display.DEBUG(x, y);
-    });
+        });
+
+
     //event listener ekleme
     document.addEventListener('keydown', (event) => {
         charClear(); //karakteri siliyoruz
@@ -91,11 +98,13 @@ let Game = function(){
     //output callback
     function fovCompute(char) {
             fov.compute(char.x, char.y, 5, function(x, y, r, visibility) {
-            let ch = (r ? (map[x+","+y].presence ? map[x+","+y].presence.ch : map[x+","+y].ch) : char.ch); //presence varsa presence'ın ch'si yoksa haritanın ch'si, en sonunda char'ın ch'si
-            r ? map[x+","+y].seen = true : null; //eğer r ise haritadaki nokta görünmüş oluyor
-            let color = (map[x+","+y].presence && map[x+","+y].presence.bg ? map[x+","+y].presence.bg : map[x+","+y].bg);
-            let fg = (map[x+","+y].presence && map[x+","+y].presence.fg ? map[x+","+y].presence.fg : map[x+","+y].fg);
-            display.draw(x, y, ch, fg, color);
+            if (map[x+","+y]){
+                let ch = (map[x+","+y].presence && map[x+","+y].presence.ch ? map[x+","+y].presence.ch : map[x+","+y].ch); //presence varsa presence'ın ch'si, yoksa haritanın ch'si, en sonunda char'ın ch'si
+                map[x+","+y].seen = true; //eğer r ise haritadaki nokta görünmüş oluyor
+                let fg = (map[x+","+y].presence && map[x+","+y].presence.fg ? map[x+","+y].presence.fg : map[x+","+y].fg);//presence varsa ve presence'ın fg rengi varsa, yoksa haritanın fg rengi, en sonunda char'ın fg rengi
+                let color = map[x+","+y].presence && map[x+","+y].presence.bg ? map[x+","+y].presence.bg : map[x+","+y].bg;//presence varsa ve presence'ın bg rengi varsa, yoksa haritanın bg rengi, en sonunda char'ın bg rengi
+                display.draw(x, y, ch, fg, color);
+            }
         } );
     };
 //======================================================================================================
@@ -120,3 +129,5 @@ let Game = function(){
     Object.assign(portal, freeCells[getRandom(freeCells)]);
 return {getRandom, lightPasses, isPassible, init, }
 }();
+
+Game.init();
