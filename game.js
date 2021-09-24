@@ -28,12 +28,18 @@ let Game = function(){
         for (let cha in characters) {
             delete map[characters[cha].x+","+characters[cha].y].presence;
         };
+        for (let cha in players) {
+            delete map[players[cha].x+","+players[cha].y].presence;
+        };
     };
 
     //haritaya character ekle
     function charAdd() {
         for (let cha in characters) {
             map[characters[cha].x+","+characters[cha].y].presence = characters[cha];
+        };
+        for (let cha in players) {
+            map[players[cha].x+","+players[cha].y].presence = players[cha];
         };
     };
 
@@ -63,12 +69,13 @@ let Game = function(){
     document.body.append(display.getContainer());
 
     let freeCells = [];
+    let players = [];
     let characters = [];
     let rand = function () {
         return Math.round(Math.random())
     };
 
-    let map = new ROT.Map.Cellular(displayOptions.width, displayOptions.height).randomize(0.2);
+    let map = new ROT.Map.Cellular(displayOptions.width, displayOptions.height).randomize(0.4);
     map.connect();
     map.create(function(x, y, type) {
         map[x+","+y] = (type === 0 ? {ch:".", bg: "grey", fg: "white", isPassible: true}:{ch:"#", bg: "black"}); //haritaya "cell"'a göre "ch" verme
@@ -80,15 +87,23 @@ let Game = function(){
     //event listener ekleme
     document.addEventListener('keydown', (event) => {
         charClear(); //karakteri siliyoruz
-        let code = event.code;
-        if (code === "ArrowLeft"){
+        let code = event.key;
+        if (code === "ArrowLeft" || code === "4" ){
             if (isPassible(player.x - 1, player.y)) {player.x -=1};
-        };if (code === "ArrowRight"){
+        };if (code === "ArrowRight" || code === "6"){
             if (isPassible(player.x + 1, player.y)) {player.x +=1};
-        };if (code === "ArrowUp"){
+        };if (code === "ArrowUp" || code === "8"){
             if (isPassible(player.x, player.y - 1)) {player.y -=1};
-        };if (code === "ArrowDown"){
+        };if (code === "ArrowDown" || code === "2"){
             if (isPassible(player.x, player.y + 1)) {player.y +=1};
+        };if (code === "7" || code === "Home"){
+            if (isPassible(player.x - 1, player.y - 1)) {player.y -=1, player.x -=1};
+        };if (code === "1" || code === "End"){
+            if (isPassible(player.x -1, player.y + 1)) {player.x -= 1, player.y +=1};
+        };if (code === "9" || code === "PageUp"){
+            if (isPassible(player.x +1, player.y - 1)) {player.x += 1, player.y -=1};
+        };if (code === "3" || code === "PageDown"){
+            if (isPassible(player.x + 1, player.y + 1)) {player.y +=1, player.x +=1};
         };
         init();
     });
@@ -108,21 +123,12 @@ let Game = function(){
         } );
     };
 //======================================================================================================
-    //haritadaki karakter sınıfı
-    let character = function (x, y, ch, fg, bg) {
-        this.x = x || null, 
-        this.y = y || null, 
-        this.ch = ch || null, 
-        this.fg = fg || null, 
-        this.bg = bg || null,
-
-        //karakterleri "characters" array'e ekleme
-        characters.push(this);
-    };
+    
 
 //================================karakterler======================
-    let player = new character(null, null, "@","yellow", "red");
-    let portal = new character(null, null, "€","white", "green");
+    let player = new Person(null, null, "@","yellow", "red", players);
+    let portal = new Person(null, null, "€","white", "green", characters);
+    let mortal = new Person(5, 3, "M","pink", "black", characters)
 
     //karakterleri rastgele noktaya atma
     Object.assign(player, freeCells[getRandom(freeCells)]);
