@@ -1,15 +1,29 @@
 //haritadaki karakter sınıfı
-const Character = function (x, y, ch, fg, bg, params) {
+let Character = function (x, y, storArray ) {
     this.x = x || null, 
     this.y = y || null, 
-    this.ch = ch || null, 
-    this.fg = fg || null, 
-    this.bg = bg || null,
+    //this.ch = ch || null, 
+    //this.fg = fg || null, 
+    //this.bg = bg || null,
 
-    //karakterleri "params"a ekleme
-    params.push(this) || null;
+    //karakterleri "storArray"a ekleme
+    storArray.push(this);
 };
 
-let Person = function (x, y, ch, fg, bg, params) {
-    Character.call(this, x, y, ch, fg, bg, params);
+let City = function (x, y, fg, bg, storArray) {
+    Character.call(this, x, y, storArray);
+    this.ch = "C";
+    this.fg = fg || null;
+    this.bg = bg || null;
 };
+
+let Person = function (x, y, ch, fg, bg, storArray) {
+    Character.call(this, x, y, storArray);
+    this.ch = ch;
+    this.fg = fg || null;
+    this.bg = bg || null;
+    this.move = function () {
+        this.x +=1
+    };
+};
+

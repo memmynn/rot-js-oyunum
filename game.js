@@ -24,31 +24,32 @@ let Game = function(){
     };
 
     //haritadaki presence'ı temizle
-    function charClear() {
-        for (let cha in characters) {
-            delete map[characters[cha].x+","+characters[cha].y].presence;
-        };
-        for (let cha in players) {
-            delete map[players[cha].x+","+players[cha].y].presence;
+    function charClear(storeArray) {
+        for (let cha in storeArray) {
+            delete map[storeArray[cha].x+","+storeArray[cha].y].presence;
         };
     };
 
     //haritaya character ekle
-    function charAdd() {
-        for (let cha in characters) {
-            map[characters[cha].x+","+characters[cha].y].presence = characters[cha];
-        };
-        for (let cha in players) {
-            map[players[cha].x+","+players[cha].y].presence = players[cha];
+    function charAdd(storeArray) {
+        for (let cha in storeArray) {
+            map[storeArray[cha].x+","+storeArray[cha].y].presence = storeArray[cha];
         };
     };
 
     //oyun işle
     function init() {
-        charAdd();
+        charAdd(players);
+        charAdd(characters);
+        charAdd(cities);
         fovCompute(player);
+        portal.move();
     };
-
+    
+    let freeCells = [];
+    let players = [];
+    let characters = [];
+    let cities = [];
 //================================================OYUN BAŞLATMA========================================
 
 //========================================DÜNYA==============================================================
@@ -68,9 +69,7 @@ let Game = function(){
 
     document.body.append(display.getContainer());
 
-    let freeCells = [];
-    let players = [];
-    let characters = [];
+
     let rand = function () {
         return Math.round(Math.random())
     };
@@ -84,29 +83,7 @@ let Game = function(){
         });
 
 
-    //event listener ekleme
-    document.addEventListener('keydown', (event) => {
-        charClear(); //karakteri siliyoruz
-        let code = event.key;
-        if (code === "ArrowLeft" || code === "4" ){
-            if (isPassible(player.x - 1, player.y)) {player.x -=1};
-        };if (code === "ArrowRight" || code === "6"){
-            if (isPassible(player.x + 1, player.y)) {player.x +=1};
-        };if (code === "ArrowUp" || code === "8"){
-            if (isPassible(player.x, player.y - 1)) {player.y -=1};
-        };if (code === "ArrowDown" || code === "2"){
-            if (isPassible(player.x, player.y + 1)) {player.y +=1};
-        };if (code === "7" || code === "Home"){
-            if (isPassible(player.x - 1, player.y - 1)) {player.y -=1, player.x -=1};
-        };if (code === "1" || code === "End"){
-            if (isPassible(player.x -1, player.y + 1)) {player.x -= 1, player.y +=1};
-        };if (code === "9" || code === "PageUp"){
-            if (isPassible(player.x +1, player.y - 1)) {player.x += 1, player.y -=1};
-        };if (code === "3" || code === "PageDown"){
-            if (isPassible(player.x + 1, player.y + 1)) {player.y +=1, player.x +=1};
-        };
-        init();
-    });
+
 
     let fov = new ROT.FOV.PreciseShadowcasting(lightPasses);
 
@@ -121,19 +98,44 @@ let Game = function(){
                 display.draw(x, y, ch, fg, color);
             }
         } );
+
+        //event listener ekleme
+        document.addEventListener('keydown', (event) => {
+            charClear(); //karakteri siliyoruz
+            let code = event.key;
+            if (code === "ArrowLeft" || code === "4" ){
+                if (isPassible(player.x - 1, player.y)) {player.x -=1};
+            };if (code === "ArrowRight" || code === "6"){
+                if (isPassible(player.x + 1, player.y)) {player.x +=1};
+            };if (code === "ArrowUp" || code === "8"){
+                if (isPassible(player.x, player.y - 1)) {player.y -=1};
+            };if (code === "ArrowDown" || code === "2"){
+                if (isPassible(player.x, player.y + 1)) {player.y +=1};
+            };if (code === "7" || code === "Home"){
+                if (isPassible(player.x - 1, player.y - 1)) {player.y -=1, player.x -=1};
+            };if (code === "1" || code === "End"){
+                if (isPassible(player.x -1, player.y + 1)) {player.x -= 1, player.y +=1};
+            };if (code === "9" || code === "PageUp"){
+                if (isPassible(player.x +1, player.y - 1)) {player.x += 1, player.y -=1};
+            };if (code === "3" || code === "PageDown"){
+                if (isPassible(player.x + 1, player.y + 1)) {player.y +=1, player.x +=1};
+            };
+            init();
+        });
     };
 //======================================================================================================
     
 
 //================================karakterler======================
+    let mortal = new City(5, 3,"pink", "black",cities);
     let player = new Person(null, null, "@","yellow", "red", players);
     let portal = new Person(null, null, "€","white", "green", characters);
-    let mortal = new Person(5, 3, "M","pink", "black", characters)
 
     //karakterleri rastgele noktaya atma
     Object.assign(player, freeCells[getRandom(freeCells)]);
     Object.assign(portal, freeCells[getRandom(freeCells)]);
-return {getRandom, lightPasses, isPassible, init, }
+
+return {getRandom, lightPasses, isPassible, init, portal:portal, mortal:mortal}
 }();
 
 Game.init();
