@@ -24,26 +24,26 @@ let Game = function(){
     };
 
     //haritadaki presence'ı temizle
-    function charClear(storeArray) {
-        for (let cha in storeArray) {
-            delete map[storeArray[cha].x+","+storeArray[cha].y].presence;
+    function charClear(...storeArray) {
+        for (let ary in storeArray) {
+            for (let cha in storeArray[ary]) {
+                delete map[storeArray[ary][cha].x+","+storeArray[ary][cha].y].presence;
+            };
         };
     };
 
     //haritaya character ekle
-    function charAdd(storeArray) {
-        for (let cha in storeArray) {
-            map[storeArray[cha].x+","+storeArray[cha].y].presence = storeArray[cha];
+    function charAdd(...storeArray) {
+        for (let ary in storeArray) {
+            for (let cha in storeArray[ary]) {
+                map[storeArray[ary][cha].x+","+storeArray[ary][cha].y].presence = storeArray[ary][cha];
+            };
         };
     };
-
     //oyun işle
     function init() {
-        charAdd(players);
-        charAdd(characters);
-        charAdd(cities);
+        charAdd(players, characters, cities);
         fovCompute(player);
-        portal.move();
     };
     
     let freeCells = [];
@@ -98,31 +98,32 @@ let Game = function(){
                 display.draw(x, y, ch, fg, color);
             }
         } );
+    };
 
         //event listener ekleme
-        document.addEventListener('keydown', (event) => {
-            charClear(); //karakteri siliyoruz
-            let code = event.key;
-            if (code === "ArrowLeft" || code === "4" ){
+        document.addEventListener('keydown', function (event) {
+            let code = event.code;
+            charClear(players, characters, cities); //karakteri siliyoruz
+            if (code === "Numpad4" || code === "ArrowLeft" ){
                 if (isPassible(player.x - 1, player.y)) {player.x -=1};
-            };if (code === "ArrowRight" || code === "6"){
+            } if (code === "Numpad6" || code === "ArrowRight"){
                 if (isPassible(player.x + 1, player.y)) {player.x +=1};
-            };if (code === "ArrowUp" || code === "8"){
+            } if (code === "Numpad8" || code === "ArrowUp"){
                 if (isPassible(player.x, player.y - 1)) {player.y -=1};
-            };if (code === "ArrowDown" || code === "2"){
+            }else if (code === "Numpad2" || code === "ArrowDown"){
                 if (isPassible(player.x, player.y + 1)) {player.y +=1};
-            };if (code === "7" || code === "Home"){
+            }else if (code === "Numpad7"){
                 if (isPassible(player.x - 1, player.y - 1)) {player.y -=1, player.x -=1};
-            };if (code === "1" || code === "End"){
+            }else if (code === "Numpad1"){
                 if (isPassible(player.x -1, player.y + 1)) {player.x -= 1, player.y +=1};
-            };if (code === "9" || code === "PageUp"){
+            }else if (code === "Numpad9"){
                 if (isPassible(player.x +1, player.y - 1)) {player.x += 1, player.y -=1};
-            };if (code === "3" || code === "PageDown"){
+            }else if (code === "Numpad3"){
                 if (isPassible(player.x + 1, player.y + 1)) {player.y +=1, player.x +=1};
             };
             init();
         });
-    };
+
 //======================================================================================================
     
 
@@ -135,7 +136,7 @@ let Game = function(){
     Object.assign(player, freeCells[getRandom(freeCells)]);
     Object.assign(portal, freeCells[getRandom(freeCells)]);
 
-return {getRandom, lightPasses, isPassible, init, portal:portal, mortal:mortal}
+return {getRandom, lightPasses, isPassible, init, /*portal:portal, mortal:mortal, players:players, cities:cities, characters:characters*/}
 }();
 
 Game.init();
