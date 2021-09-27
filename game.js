@@ -40,6 +40,14 @@ let Game = function(){
             };
         };
     };
+    //haritaya şehir ekle
+    function cityAdd(...storeArray) {
+        for (let ary in storeArray) {
+            for (let city in storeArray[ary]) {
+                map[storeArray[ary][city].x+","+storeArray[ary][city].y] = this;
+            };
+        };
+    };
     //oyun işle
     function init() {
         charAdd(players, characters, cities);
@@ -55,8 +63,8 @@ let Game = function(){
 //========================================DÜNYA==============================================================
 
     let displayOptions = {
-        width: 50,
-        height: 40,
+        width: 60,
+        height: 60,
         fontSize: 18,
         fontFamily: "monospace",
         //fg: "#CB730B",//"#F0FFFF"
@@ -74,15 +82,33 @@ let Game = function(){
         return Math.round(Math.random())
     };
 
-    let map = new ROT.Map.Cellular(displayOptions.width, displayOptions.height).randomize(0.4);
-    map.connect();
+    let map = new ROT.Map.Cellular(displayOptions.width, displayOptions.height).randomize(0.9);
+    
     map.create(function(x, y, type) {
-        map[x+","+y] = (type === 0 ? {ch:".", bg: "grey", fg: "white", isPassible: true}:{ch:"#", bg: "black"}); //haritaya "cell"'a göre "ch" verme
+        //map[x+","+y] = (type === 0 ? {ch:".", bg: "grey", fg: "white", isPassible: true}:{ch:"#", bg: "black"}); //haritaya "cell"'a göre "ch" verme
         if(type === 0) {freeCells.push({"x":x, "y":y})};
         //display.DEBUG(x, y);
         });
+    
 
+    //================================karakterler======================
+    let player = new Person(null, null, "@","yellow", "red", players);
+    let portal = new Person(null, null, "€","white", "green", characters);
 
+    //cityAdd(cities);
+    let mortal = new City(5, 3,"pink", "black",cities);    
+
+    map.set(5,3,0);//haritadaki şehri "0" değerine ayarla
+
+    //haritadaki "0" değerlerini birbirine bağla ve haritaya değer ver
+    map.connect(function(x, y, type){
+        map[x+","+y] = (type === 0 ? {ch:".", bg: "grey", fg: "white", isPassible: true}:{ch:"#", bg: "black"}); //haritaya "cell"'a göre "ch" verme
+        });
+
+        
+    //karakterleri rastgele noktaya atma
+    Object.assign(player, freeCells[getRandom(freeCells)]);
+    Object.assign(portal, freeCells[getRandom(freeCells)]);
 
 
     let fov = new ROT.FOV.PreciseShadowcasting(lightPasses);
@@ -127,16 +153,11 @@ let Game = function(){
 //======================================================================================================
     
 
-//================================karakterler======================
-    let mortal = new City(5, 3,"pink", "black",cities);
-    let player = new Person(null, null, "@","yellow", "red", players);
-    let portal = new Person(null, null, "€","white", "green", characters);
 
-    //karakterleri rastgele noktaya atma
-    Object.assign(player, freeCells[getRandom(freeCells)]);
-    Object.assign(portal, freeCells[getRandom(freeCells)]);
 
-return {getRandom, lightPasses, isPassible, init, /*portal:portal, mortal:mortal, players:players, cities:cities, characters:characters*/}
+
+
+return {getRandom, lightPasses, isPassible, init, map, portal:portal, mortal:mortal, players:players, cities:cities, characters:characters}
 }();
 
 Game.init();
