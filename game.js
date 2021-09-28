@@ -5,16 +5,17 @@
     };
 
 
+
 //=============================OYUN==========================
 let Game = function(){
 //==============================FONKSİYONLAR==================//
 
-    //input callback
+     //input callback
     function lightPasses(x, y){
         let key = x+","+y;
         if(key in map) {return (map[key].isPassible === true);}
         return false;
-    };  
+    }; 
 
     //geçilebilir olma testi
     function isPassible(x, y) {
@@ -40,18 +41,23 @@ let Game = function(){
             };
         };
     };
-    //haritaya şehir ekle
-    function cityAdd(...storeArray) {
+
+    //array map et
+    function arMap(...storeArray) {
         for (let ary in storeArray) {
-            for (let city in storeArray[ary]) {
-                map[storeArray[ary][city].x+","+storeArray[ary][city].y] = this;
+            for (let cha in storeArray[ary]) {
+                storeArray[ary][cha].move();
             };
         };
     };
+    
     //oyun işle
     function init() {
+        
+        arMap(characters);
         charAdd(players, characters, cities);
         fovCompute(player);
+        fovCompute(portal);
     };
     
     let freeCells = [];
@@ -77,12 +83,7 @@ let Game = function(){
 
     document.body.append(display.getContainer());
 
-
-    let rand = function () {
-        return Math.round(Math.random())
-    };
-
-    let map = new ROT.Map.Cellular(displayOptions.width, displayOptions.height).randomize(0.9);
+    let map = new ROT.Map.Cellular(displayOptions.width, displayOptions.height).randomize(0.35);
     
     map.create(function(x, y, type) {
         //map[x+","+y] = (type === 0 ? {ch:".", bg: "grey", fg: "white", isPassible: true}:{ch:"#", bg: "black"}); //haritaya "cell"'a göre "ch" verme
@@ -98,7 +99,7 @@ let Game = function(){
     //cityAdd(cities);
     let mortal = new City(5, 3,"pink", "black",cities);    
 
-    map.set(5,3,0);//haritadaki şehri "0" değerine ayarla
+    map.set(5,3,0);//haritadaki şehirleri "0" değerine ayarla parametreler x, y, value
 
     //haritadaki "0" değerlerini birbirine bağla ve haritaya değer ver
     map.connect(function(x, y, type){
@@ -157,7 +158,7 @@ let Game = function(){
 
 
 
-return {getRandom, lightPasses, isPassible, init, map, portal:portal, mortal:mortal, players:players, cities:cities, characters:characters}
+return {getRandom, isPassible, init, map, portal:portal, mortal:mortal, players:players, cities:cities, characters:characters}
 }();
 
 Game.init();
