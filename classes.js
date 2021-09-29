@@ -1,4 +1,4 @@
-
+'use strict'
 //haritadaki karakter sınıfı
 let Character = function (x, y, storArray ) {
     this.x = x || null, 
@@ -30,35 +30,30 @@ let Person = function (x, y, ch, fg, bg, storArray) {
         
         while (true){
             let action = getRandEl(actions);
-            if (action === "moveLeft") { 
+            if (action === "moveLeft" && this.x-1 > -1) { 
                 if (Game.isPassible(this.x - 1, this.y)) {this.x -=1; break};
-            };
-            if (action === "moveRight") { 
+            } 
+            else if (action === "moveRight" && this.x+1 < Game.map._width) { 
                 if (Game.isPassible(this.x + 1, this.y)) {this.x +=1; break};
-            };
-            if (action === "moveUp") { 
+            }
+            else if (action === "moveUp" && this.y-1 > -1) { 
                 if (Game.isPassible(this.x, this.y-1)) {this.y -=1; break};
-            };
-            if (action === "moveDown") { 
+            }
+            else if (action === "moveDown" && this.y+1 < Game.map._height) { 
                 if (Game.isPassible(this.x, this.y+1)) {this.y +=1; break};
-            };
-            if (action === "moveUL") { 
+            }
+            else if (action === "moveUL" && this.x-1 > -1 && this.y-1 > -1) { 
                 if (Game.isPassible(this.x - 1, this.y-1)) {this.x -=1, this.y -=1; break};
-            };
-            if (action === "moveLeft") { 
-                if (Game.isPassible(this.x - 1, this.y)) {this.x -=1; break};
-            };
-            if (action === "moveDL") { 
+            }
+            else if (action === "moveDL" && this.x-1 > -1 && this.y+1 < Game.map._height) { 
                 if (Game.isPassible(this.x - 1, this.y+1)) {this.x -=1, this.y +=1; break};
-            };
-            if (action === "MoveUR") { 
+            } 
+            else if (action === "MoveUR" && this.x+1 < Game.map._width && this.y-1 > -1) { 
                 if (Game.isPassible(this.x + 1, this.y -1)) {this.x +=1, this.y -=1; break};
-            };
-            if (action === "moveDR") { 
+            }
+            else if (action === "moveDR" && this.x+1 < Game.map._width && this.y+1 < Game.map._height) { 
                 if (Game.isPassible(this.x + 1, this.y +1)) {this.x +=1, this.y +=1; break};
             };
-        
-         
         };
     };
 };

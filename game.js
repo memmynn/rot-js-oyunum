@@ -1,3 +1,4 @@
+'use strict'
 //array'den random item alma
 
     function getRandom(array){
@@ -10,17 +11,21 @@
 let Game = function(){
 //==============================FONKSİYONLAR==================//
 
-     //input callback
+    //haritadaki şehirleri "0" değerine ayarla parametreler x, y, value
+    function cityAdd(map, arrays){
+        for (let city in arrays) {map.set(arrays[city].x, arrays[city].y, 0)};
+    };
+    //input callback
     function lightPasses(x, y){
         let key = x+","+y;
-        if(key in map) {return (map[key].isPassible === true);}
+        if(x < map._width && y < map._height && x > -1 && y > -1) {return (map[key].isPassible === true);}
         return false;
     }; 
 
     //geçilebilir olma testi
     function isPassible(x, y) {
         let key = x+","+y;
-        if(map[key].isPassible) {return true};
+        if(x < map._width && y < map._height && x > -1 && y > -1){return (map[key].isPassible === true)};
         return false;
     };
 
@@ -53,11 +58,10 @@ let Game = function(){
     
     //oyun işle
     function init() {
-        
         arMap(characters);
         charAdd(players, characters, cities);
         fovCompute(player);
-        fovCompute(portal);
+        for (let i in characters){fovCompute(characters[i])};
     };
     
     let freeCells = [];
@@ -83,7 +87,7 @@ let Game = function(){
 
     document.body.append(display.getContainer());
 
-    let map = new ROT.Map.Cellular(displayOptions.width, displayOptions.height).randomize(0.35);
+    let map = new ROT.Map.Cellular(displayOptions.width, displayOptions.height).randomize(0.4);
     
     map.create(function(x, y, type) {
         //map[x+","+y] = (type === 0 ? {ch:".", bg: "grey", fg: "white", isPassible: true}:{ch:"#", bg: "black"}); //haritaya "cell"'a göre "ch" verme
@@ -95,11 +99,12 @@ let Game = function(){
     //================================karakterler======================
     let player = new Person(null, null, "@","yellow", "red", players);
     let portal = new Person(null, null, "€","white", "green", characters);
+    for (let i = 0; i< 30; i++){let _ = new Person(null, null, "T", "black", "white", characters) };
 
     //cityAdd(cities);
-    let mortal = new City(5, 3,"pink", "black",cities);    
-
-    map.set(5,3,0);//haritadaki şehirleri "0" değerine ayarla parametreler x, y, value
+    let mortal = new City(5, 3,"pink", "black",cities);
+    let light = new City(55, 33, "white", "green", cities);
+    cityAdd(map, cities);
 
     //haritadaki "0" değerlerini birbirine bağla ve haritaya değer ver
     map.connect(function(x, y, type){
@@ -109,7 +114,7 @@ let Game = function(){
         
     //karakterleri rastgele noktaya atma
     Object.assign(player, freeCells[getRandom(freeCells)]);
-    Object.assign(portal, freeCells[getRandom(freeCells)]);
+    for(let i = 0; i < characters.length; i++) {Object.assign(characters[i], freeCells[getRandom(freeCells)])}
 
 
     let fov = new ROT.FOV.PreciseShadowcasting(lightPasses);
@@ -117,8 +122,8 @@ let Game = function(){
     //output callback
     function fovCompute(char) {
             fov.compute(char.x, char.y, 5, function(x, y, r, visibility) {
-            if (map[x+","+y]){
-                let ch = (map[x+","+y].presence && map[x+","+y].presence.ch ? map[x+","+y].presence.ch : map[x+","+y].ch); //presence varsa presence'ın ch'si, yoksa haritanın ch'si, en sonunda char'ın ch'si
+            if (x < map._width && y < map._height && x > -1 && y > -1){//harita içinde olup olmadığı kontrolü
+                let ch = (map[x+","+y].presence && map[x+","+y].presence.ch ? map[x+","+y].presence.ch : map[x+","+y].ch); //presence varsa presence'ın ch'si, yoksa haritanın ch'si
                 map[x+","+y].seen = true; //eğer r ise haritadaki nokta görünmüş oluyor
                 let fg = (map[x+","+y].presence && map[x+","+y].presence.fg ? map[x+","+y].presence.fg : map[x+","+y].fg);//presence varsa ve presence'ın fg rengi varsa, yoksa haritanın fg rengi, en sonunda char'ın fg rengi
                 let color = map[x+","+y].presence && map[x+","+y].presence.bg ? map[x+","+y].presence.bg : map[x+","+y].bg;//presence varsa ve presence'ın bg rengi varsa, yoksa haritanın bg rengi, en sonunda char'ın bg rengi
