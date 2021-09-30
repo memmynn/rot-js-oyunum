@@ -5,8 +5,6 @@
         return Math.floor(Math.random()*array.length)
     };
 
-
-
 //=============================OYUN==========================
 let Game = function(){
 //==============================FONKSİYONLAR==================//
@@ -75,7 +73,7 @@ let Game = function(){
     let displayOptions = {
         width: 60,
         height: 60,
-        fontSize: 18,
+        fontSize: 23,
         fontFamily: "monospace",
         //fg: "#CB730B",//"#F0FFFF"
         //bg: "#000000",
@@ -84,10 +82,10 @@ let Game = function(){
     };
 
     let display = new ROT.Display(displayOptions);
+    let displayDiv = document.getElementById('dsply')
+    displayDiv.append(display.getContainer());
 
-    document.body.append(display.getContainer());
-
-    let map = new ROT.Map.Cellular(displayOptions.width, displayOptions.height).randomize(0.4);
+    let map = new ROT.Map.Cellular(displayOptions.width, displayOptions.height).randomize(0.38);//rastgele 'randomize' coğrafya çıkarma
     
     map.create(function(x, y, type) {
         //map[x+","+y] = (type === 0 ? {ch:".", bg: "grey", fg: "white", isPassible: true}:{ch:"#", bg: "black"}); //haritaya "cell"'a göre "ch" verme
@@ -99,11 +97,14 @@ let Game = function(){
     //================================karakterler======================
     let player = new Person(null, null, "@","yellow", "red", players);
     let portal = new Person(null, null, "€","white", "green", characters);
-    for (let i = 0; i< 30; i++){let _ = new Person(null, null, "T", "black", "white", characters) };
+    for (let i = 0; i< 130; i++){let _ = new Person(null, null, "T", "black", "white", characters) };
 
     //cityAdd(cities);
     let mortal = new City(5, 3,"pink", "black",cities);
+    let medDark = new City(15, 16,"pink", "navy",cities);
     let light = new City(55, 33, "white", "green", cities);
+    let mediumLight = new City(38, 40, "grey", "green", cities);
+
     cityAdd(map, cities);
 
     //haritadaki "0" değerlerini birbirine bağla ve haritaya değer ver
@@ -165,5 +166,3 @@ let Game = function(){
 
 return {getRandom, isPassible, init, map, portal:portal, mortal:mortal, players:players, cities:cities, characters:characters}
 }();
-
-Game.init();
