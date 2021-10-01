@@ -15,6 +15,9 @@ let City = function (x, y, fg, bg, storArray) {
     this.ch = "C";
     this.fg = fg || null;
     this.bg = bg || null;
+    this.options = [
+        "Kingdom Hall", 
+        "Inn"];
 };
 
 let Person = function (x, y, ch, fg, bg, storArray) {

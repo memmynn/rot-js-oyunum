@@ -8,6 +8,12 @@
 //=============================OYUN==========================
 let Game = function(){
 //==============================FONKSİYONLAR==================//
+    //buton ekleme
+    function buttonAdd(domEl, ch){
+        
+        domEl.innerText = ""; //document element'in temizlenmesi
+        for (let option in ch.options){ let buton = document.createElement("button"); buton.innerText = ch.options[option]; domEl.append(buton)};
+    };
 
     //haritadaki şehirleri "0" değerine ayarla parametreler x, y, value
     function cityAdd(map, arrays){
@@ -44,21 +50,13 @@ let Game = function(){
             };
         };
     };
-
-    //array map et
-    function arMap(...storeArray) {
-        for (let ary in storeArray) {
-            for (let cha in storeArray[ary]) {
-                storeArray[ary][cha].move();
-            };
-        };
-    };
     
     //oyun işle
     function init() {
-        arMap(characters);
+        characters.forEach(element => element.move()); //karakterlerin hareket etmesi 'move()'
         charAdd(players, characters, cities);
         fovCompute(player);
+        buttonAdd(foot, cities[0]);
         for (let i in characters){fovCompute(characters[i])};
     };
     
@@ -73,18 +71,20 @@ let Game = function(){
     let displayOptions = {
         width: 60,
         height: 60,
-        fontSize: 23,
+        fontSize: 26,
         fontFamily: "monospace",
         //fg: "#CB730B",//"#F0FFFF"
         //bg: "#000000",
         spacing: 1,
         layout: "rect",
     };
+    //====================================DOM ELEMENTLERİ===============================
 
     let display = new ROT.Display(displayOptions);
-    let displayDiv = document.getElementById('dsply')
+    let displayDiv = document.getElementById('dsply');
     displayDiv.append(display.getContainer());
-
+    let foot = document.getElementById('foot');
+    //==============================================================================
     let map = new ROT.Map.Cellular(displayOptions.width, displayOptions.height).randomize(0.38);//rastgele 'randomize' coğrafya çıkarma
     
     map.create(function(x, y, type) {
