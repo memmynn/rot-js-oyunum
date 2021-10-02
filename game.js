@@ -69,13 +69,13 @@ let Game = function(){
 //========================================DÜNYA==============================================================
 
     let displayOptions = {
-        width: 60,
-        height: 60,
-        fontSize: 26,
+        width: 25,
+        height: 25,
+        fontSize: 30,
         fontFamily: "monospace",
         //fg: "#CB730B",//"#F0FFFF"
         //bg: "#000000",
-        spacing: 1,
+        spacing: 1.3,
         layout: "rect",
     };
     //====================================DOM ELEMENTLERİ===============================
@@ -85,7 +85,7 @@ let Game = function(){
     displayDiv.append(display.getContainer());
     let foot = document.getElementById('foot');
     //==============================================================================
-    let map = new ROT.Map.Cellular(displayOptions.width, displayOptions.height).randomize(0.38);//rastgele 'randomize' coğrafya çıkarma
+    let map = new ROT.Map.Cellular(60, 60).randomize(0.38);//rastgele 'randomize' coğrafya çıkarma
     
     map.create(function(x, y, type) {
         //map[x+","+y] = (type === 0 ? {ch:".", bg: "grey", fg: "white", isPassible: true}:{ch:"#", bg: "black"}); //haritaya "cell"'a göre "ch" verme
@@ -102,8 +102,8 @@ let Game = function(){
     //cityAdd(cities);
     let mortal = new City(5, 3,"pink", "black",cities);
     let medDark = new City(15, 16,"pink", "navy",cities);
-    let light = new City(55, 33, "white", "green", cities);
-    let mediumLight = new City(38, 40, "grey", "green", cities);
+    let light = new City(19, 22, "white", "green", cities);
+    let mediumLight = new City(24, 23, "grey", "green", cities);
 
     cityAdd(map, cities);
 
@@ -115,7 +115,7 @@ let Game = function(){
         
     //karakterleri rastgele noktaya atma
     Object.assign(player, freeCells[getRandom(freeCells)]);
-    for(let i = 0; i < characters.length; i++) {Object.assign(characters[i], freeCells[getRandom(freeCells)])}
+    for(let i = 0; i < characters.length; i++) {Object.assign(characters[i], freeCells[getRandom(freeCells)])};
 
 
     let fov = new ROT.FOV.PreciseShadowcasting(lightPasses);
