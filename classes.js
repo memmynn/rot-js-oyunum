@@ -1,4 +1,5 @@
 'use strict'
+
 //haritadaki karakter sınıfı
 let Character = function (x, y, storArray ) {
     this.x = x || null, 

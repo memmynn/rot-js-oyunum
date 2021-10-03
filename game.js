@@ -53,11 +53,15 @@ let Game = function(){
     
     //oyun işle
     function init() {
+
         characters.forEach(element => element.move()); //karakterlerin hareket etmesi 'move()'
         charAdd(players, characters, cities);
+        //for (let i in characters){fovCompute(characters[i])};
+        display.clear();
+        //centerCamera(player.x, player.y);
         fovCompute(player);
+        
         buttonAdd(foot, cities[0]);
-        for (let i in characters){fovCompute(characters[i])};
     };
     
     let freeCells = [];
@@ -69,15 +73,16 @@ let Game = function(){
 //========================================DÜNYA==============================================================
 
     let displayOptions = {
-        width: 25,
-        height: 25,
+        width: 20,
+        height: 16,
         fontSize: 30,
         fontFamily: "monospace",
-        //fg: "#CB730B",//"#F0FFFF"
-        //bg: "#000000",
+        fg: "#CB730B",//"#F0FFFF"
+        bg: "#000000",
         spacing: 1.3,
-        layout: "rect",
+        //layout: "rect",
     };
+
     //====================================DOM ELEMENTLERİ===============================
 
     let display = new ROT.Display(displayOptions);
@@ -86,14 +91,11 @@ let Game = function(){
     let foot = document.getElementById('foot');
     //==============================================================================
     let map = new ROT.Map.Cellular(60, 60).randomize(0.38);//rastgele 'randomize' coğrafya çıkarma
-    
     map.create(function(x, y, type) {
         //map[x+","+y] = (type === 0 ? {ch:".", bg: "grey", fg: "white", isPassible: true}:{ch:"#", bg: "black"}); //haritaya "cell"'a göre "ch" verme
         if(type === 0) {freeCells.push({"x":x, "y":y})};
         //display.DEBUG(x, y);
         });
-    
-
     //================================karakterler======================
     let player = new Person(null, null, "@","yellow", "red", players);
     let portal = new Person(null, null, "€","white", "green", characters);
@@ -116,8 +118,18 @@ let Game = function(){
     //karakterleri rastgele noktaya atma
     Object.assign(player, freeCells[getRandom(freeCells)]);
     for(let i = 0; i < characters.length; i++) {Object.assign(characters[i], freeCells[getRandom(freeCells)])};
-
-
+    
+    let cameraTarget = player;
+    
+    //ekranda player'ı takip etme algoritması
+    function drawScreen (x, y, character, fgColor, bgColor) {
+		if (cameraTarget) {
+			x += (Math.round(displayOptions.width/2) - cameraTarget.x);
+			y += (Math.round(displayOptions.height/2) - cameraTarget.y);
+		}
+		return display.draw(x, y, character, fgColor, bgColor);
+	};    
+    
     let fov = new ROT.FOV.PreciseShadowcasting(lightPasses);
 
     //output callback
@@ -128,8 +140,10 @@ let Game = function(){
                 map[x+","+y].seen = true; //eğer r ise haritadaki nokta görünmüş oluyor
                 let fg = (map[x+","+y].presence && map[x+","+y].presence.fg ? map[x+","+y].presence.fg : map[x+","+y].fg);//presence varsa ve presence'ın fg rengi varsa, yoksa haritanın fg rengi, en sonunda char'ın fg rengi
                 let color = map[x+","+y].presence && map[x+","+y].presence.bg ? map[x+","+y].presence.bg : map[x+","+y].bg;//presence varsa ve presence'ın bg rengi varsa, yoksa haritanın bg rengi, en sonunda char'ın bg rengi
-                display.draw(x, y, ch, fg, color);
-            }
+                
+                drawScreen(x, y, ch, fg, color);
+                /*display.draw(x, y, ch, fg, color)*/
+            };
         } );
     };
 
