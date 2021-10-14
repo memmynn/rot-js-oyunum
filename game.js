@@ -12,7 +12,10 @@ let Game = function(){
     function buttonAdd(domEl, ch){
         
         domEl.innerText = ""; //document element'in temizlenmesi
-        for (let option in ch.options){ let buton = document.createElement("button"); buton.innerText = ch.options[option]; domEl.append(buton)};
+        if(ch.presence){//presence varsa presence'ın opsiyonları düğme olarak eklenir
+        for (let option in ch.presence.options){ let buton = document.createElement("button"); buton.innerText = ch.presence.options[option]; domEl.append(buton)};
+        return};
+        //for (let option in ch.options){ let buton = document.createElement("button"); buton.innerText = ch.options[option]; domEl.append(buton)};        
     };
 
     //haritadaki şehirleri "0" değerine ayarla parametreler x, y, value
@@ -53,7 +56,7 @@ let Game = function(){
     
     //oyun işle
     function init() {
-
+        let location = map[(player.x +","+ player.y)];
         characters.forEach(element => element.move()); //karakterlerin hareket etmesi 'move()'
         charAdd(players, characters, cities);
         //for (let i in characters){fovCompute(characters[i])};
@@ -61,7 +64,7 @@ let Game = function(){
         //centerCamera(player.x, player.y);
         fovCompute(player);
         
-        buttonAdd(foot, cities[0]);
+        buttonAdd(foot, location);
     };
     
     let freeCells = [];
@@ -73,8 +76,8 @@ let Game = function(){
 //========================================DÜNYA==============================================================
 
     let displayOptions = {
-        width: 20,
-        height: 16,
+        width: 36,
+        height: 22,
         fontSize: 30,
         fontFamily: "monospace",
         fg: "#CB730B",//"#F0FFFF"
@@ -90,7 +93,7 @@ let Game = function(){
     displayDiv.append(display.getContainer());
     let foot = document.getElementById('foot');
     //==============================================================================
-    let map = new ROT.Map.Cellular(60, 60).randomize(0.38);//rastgele 'randomize' coğrafya çıkarma
+    let map = new ROT.Map.Cellular(360, 360).randomize(0.38);//rastgele 'randomize' coğrafya çıkarma
     map.create(function(x, y, type) {
         //map[x+","+y] = (type === 0 ? {ch:".", bg: "grey", fg: "white", isPassible: true}:{ch:"#", bg: "black"}); //haritaya "cell"'a göre "ch" verme
         if(type === 0) {freeCells.push({"x":x, "y":y})};
