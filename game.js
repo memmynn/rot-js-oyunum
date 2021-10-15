@@ -1,58 +1,8 @@
 'use strict'
-//array'den random item alma
-
-    function getRandom(array){
-        return Math.floor(Math.random()*array.length)
-    };
 
 //=============================OYUN==========================
 let Game = function(){
-//==============================FONKSİYONLAR==================//
-    //buton ekleme
-    function buttonAdd(domEl, ch){
-        
-        domEl.innerText = ""; //document element'in temizlenmesi
-        if(ch.presence){//presence varsa presence'ın opsiyonları düğme olarak eklenir
-        for (let option in ch.presence.options){ let buton = document.createElement("button"); buton.innerText = ch.presence.options[option]; domEl.append(buton)};
-        return};
-        //for (let option in ch.options){ let buton = document.createElement("button"); buton.innerText = ch.options[option]; domEl.append(buton)};        
-    };
 
-    //haritadaki şehirleri "0" değerine ayarla parametreler x, y, value
-    function cityAdd(map, arrays){
-        for (let city in arrays) {map.set(arrays[city].x, arrays[city].y, 0)};
-    };
-    //input callback
-    function lightPasses(x, y){
-        let key = x+","+y;
-        if(x < map._width && y < map._height && x > -1 && y > -1) {return (map[key].isPassible === true);}
-        return false;
-    }; 
-
-    //geçilebilir olma testi
-    function isPassible(x, y) {
-        let key = x+","+y;
-        if(x < map._width && y < map._height && x > -1 && y > -1){return (map[key].isPassible === true)};
-        return false;
-    };
-
-    //haritadaki presence'ı temizle
-    function charClear(...storeArray) {
-        for (let ary in storeArray) {
-            for (let cha in storeArray[ary]) {
-                delete map[storeArray[ary][cha].x+","+storeArray[ary][cha].y].presence;
-            };
-        };
-    };
-
-    //haritaya character ekle
-    function charAdd(...storeArray) {
-        for (let ary in storeArray) {
-            for (let cha in storeArray[ary]) {
-                map[storeArray[ary][cha].x+","+storeArray[ary][cha].y].presence = storeArray[ary][cha];
-            };
-        };
-    };
     
     //oyun işle
     function init() {
@@ -93,7 +43,7 @@ let Game = function(){
     displayDiv.append(display.getContainer());
     let foot = document.getElementById('foot');
     //==============================================================================
-    let map = new ROT.Map.Cellular(360, 360).randomize(0.38);//rastgele 'randomize' coğrafya çıkarma
+    let map = new ROT.Map.Cellular(70, 55).randomize(0.38);//rastgele 'randomize' coğrafya çıkarma
     map.create(function(x, y, type) {
         //map[x+","+y] = (type === 0 ? {ch:".", bg: "grey", fg: "white", isPassible: true}:{ch:"#", bg: "black"}); //haritaya "cell"'a göre "ch" verme
         if(type === 0) {freeCells.push({"x":x, "y":y})};
@@ -155,21 +105,21 @@ let Game = function(){
             let code = event.code;
             charClear(players, characters, cities); //karakteri siliyoruz
             if (code === "Numpad4" || code === "ArrowLeft" ){
-                if (isPassible(player.x - 1, player.y)) {player.x -=1};
+                if (isPassible(player.x - 1, player.y, map)) {player.x -=1};
             } if (code === "Numpad6" || code === "ArrowRight"){
-                if (isPassible(player.x + 1, player.y)) {player.x +=1};
+                if (isPassible(player.x + 1, player.y, map)) {player.x +=1};
             } if (code === "Numpad8" || code === "ArrowUp"){
-                if (isPassible(player.x, player.y - 1)) {player.y -=1};
+                if (isPassible(player.x, player.y - 1, map)) {player.y -=1};
             }else if (code === "Numpad2" || code === "ArrowDown"){
-                if (isPassible(player.x, player.y + 1)) {player.y +=1};
+                if (isPassible(player.x, player.y + 1, map)) {player.y +=1};
             }else if (code === "Numpad7"){
-                if (isPassible(player.x - 1, player.y - 1)) {player.y -=1, player.x -=1};
+                if (isPassible(player.x - 1, player.y - 1, map)) {player.y -=1, player.x -=1};
             }else if (code === "Numpad1"){
-                if (isPassible(player.x -1, player.y + 1)) {player.x -= 1, player.y +=1};
+                if (isPassible(player.x -1, player.y + 1, map)) {player.x -= 1, player.y +=1};
             }else if (code === "Numpad9"){
-                if (isPassible(player.x +1, player.y - 1)) {player.x += 1, player.y -=1};
+                if (isPassible(player.x +1, player.y - 1, map)) {player.x += 1, player.y -=1};
             }else if (code === "Numpad3"){
-                if (isPassible(player.x + 1, player.y + 1)) {player.y +=1, player.x +=1};
+                if (isPassible(player.x + 1, player.y + 1, map)) {player.y +=1, player.x +=1};
             };
             init();
         });

@@ -35,28 +35,28 @@ let Person = function (x, y, ch, fg, bg, storArray) {
         while (true){
             let action = getRandEl(actions);
             if (action === "moveLeft" && this.x-1 > -1) { 
-                if (Game.isPassible(this.x - 1, this.y)) {this.x -=1; break};
+                if (Game.isPassible(this.x - 1, this.y, Game.map)) {this.x -=1; break};
             } 
             else if (action === "moveRight" && this.x+1 < Game.map._width) { 
-                if (Game.isPassible(this.x + 1, this.y)) {this.x +=1; break};
+                if (Game.isPassible(this.x + 1, this.y, Game.map)) {this.x +=1; break};
             }
             else if (action === "moveUp" && this.y-1 > -1) { 
-                if (Game.isPassible(this.x, this.y-1)) {this.y -=1; break};
+                if (Game.isPassible(this.x, this.y-1, Game.map)) {this.y -=1; break};
             }
             else if (action === "moveDown" && this.y+1 < Game.map._height) { 
-                if (Game.isPassible(this.x, this.y+1)) {this.y +=1; break};
+                if (Game.isPassible(this.x, this.y+1, Game.map)) {this.y +=1; break};
             }
             else if (action === "moveUL" && this.x-1 > -1 && this.y-1 > -1) { 
-                if (Game.isPassible(this.x - 1, this.y-1)) {this.x -=1, this.y -=1; break};
+                if (Game.isPassible(this.x - 1, this.y-1, Game.map)) {this.x -=1, this.y -=1; break};
             }
             else if (action === "moveDL" && this.x-1 > -1 && this.y+1 < Game.map._height) { 
-                if (Game.isPassible(this.x - 1, this.y+1)) {this.x -=1, this.y +=1; break};
+                if (Game.isPassible(this.x - 1, this.y+1, Game.map)) {this.x -=1, this.y +=1; break};
             } 
             else if (action === "MoveUR" && this.x+1 < Game.map._width && this.y-1 > -1) { 
-                if (Game.isPassible(this.x + 1, this.y -1)) {this.x +=1, this.y -=1; break};
+                if (Game.isPassible(this.x + 1, this.y -1, Game.map)) {this.x +=1, this.y -=1; break};
             }
             else if (action === "moveDR" && this.x+1 < Game.map._width && this.y+1 < Game.map._height) { 
-                if (Game.isPassible(this.x + 1, this.y +1)) {this.x +=1, this.y +=1; break};
+                if (Game.isPassible(this.x + 1, this.y +1, Game.map)) {this.x +=1, this.y +=1; break};
             };
         };
     };
