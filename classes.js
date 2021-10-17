@@ -17,8 +17,14 @@ let City = function (x, y, fg, bg, storArray) {
     this.fg = fg || null;
     this.bg = bg || null;
     this.options = [
-        "Kingdom Hall", 
-        "Inn"];
+        {title : "Kingdom Hall",
+        functionality : function(){buttonAdd(foot, this.options[0])}.bind(this),//onclick'e eklerken this kaybolduğundan bind(this) ile çözdük
+        options : [{title : "bring back my daughter",
+                    functionality : ""}],
+        },
+        {title : "Inn",
+        functionality : buttonAdd(foot, this)},
+        ];
 };
 
 let Person = function (x, y, ch, fg, bg, storArray) {

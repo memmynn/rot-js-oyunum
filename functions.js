@@ -9,10 +9,13 @@ function getRandom(array){
     function buttonAdd(domEl, ch){
         
         domEl.innerText = ""; //document element'in temizlenmesi
-        if(ch.presence){//presence varsa presence'ın opsiyonları düğme olarak eklenir
-        for (let option in ch.presence.options){ let buton = document.createElement("button"); buton.innerText = ch.presence.options[option]; domEl.append(buton)};
-        return};
-        //for (let option in ch.options){ let buton = document.createElement("button"); buton.innerText = ch.options[option]; domEl.append(buton)};        
+        //if(ch.presence){//presence varsa presence'ın opsiyonları düğme olarak eklenir
+        for (let option in ch.options){ let buton = document.createElement("button"); 
+        buton.innerText = ch.options[option].title; 
+        buton.onclick = ch.options[option].functionality;
+        domEl.append(buton);
+        };
+               
     };
 
     //haritadaki şehirleri "0" değerine ayarla parametreler x, y, value

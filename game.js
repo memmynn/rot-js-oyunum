@@ -1,4 +1,4 @@
-'use strict'
+//'use strict'
 
 //=============================OYUN==========================
 let Game = function(){
@@ -6,15 +6,15 @@ let Game = function(){
     
     //oyun işle
     function init() {
-        let location = map[(player.x +","+ player.y)];
+        _location = map[(player.x +","+ player.y)];
         characters.forEach(element => element.move()); //karakterlerin hareket etmesi 'move()'
         charAdd(players, characters, cities);
         //for (let i in characters){fovCompute(characters[i])};
         display.clear();
         //centerCamera(player.x, player.y);
         fovCompute(player);
-        
-        buttonAdd(foot, location);
+        foot.innerText = "";
+        if(_location.presence.options){buttonAdd(foot, _location.presence)};
     };
     
     let freeCells = [];
@@ -43,7 +43,7 @@ let Game = function(){
     displayDiv.append(display.getContainer());
     let foot = document.getElementById('foot');
     //==============================================================================
-    let map = new ROT.Map.Cellular(70, 55).randomize(0.38);//rastgele 'randomize' coğrafya çıkarma
+    let map = new ROT.Map.Cellular(70, 55).randomize(0.1);//rastgele 'randomize' coğrafya çıkarma
     map.create(function(x, y, type) {
         //map[x+","+y] = (type === 0 ? {ch:".", bg: "grey", fg: "white", isPassible: true}:{ch:"#", bg: "black"}); //haritaya "cell"'a göre "ch" verme
         if(type === 0) {freeCells.push({"x":x, "y":y})};
@@ -99,7 +99,7 @@ let Game = function(){
             };
         } );
     };
-
+    
         //event listener ekleme
         document.addEventListener('keydown', function (event) {
             let code = event.code;
@@ -125,7 +125,7 @@ let Game = function(){
         });
 
 //======================================================================================================
-    
+  
 
 
 
