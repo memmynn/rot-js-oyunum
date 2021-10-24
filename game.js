@@ -3,19 +3,19 @@
 //=============================OYUN==========================
 let Game = function(){
 
-    
     //oyun işle
     function init() {
         _location = map[(player.x +","+ player.y)];
-        characters.forEach(element => element.move()); //karakterlerin hareket etmesi 'move()'
-        charAdd(players, characters, cities);
-        //for (let i in characters){fovCompute(characters[i])};
         display.clear();
-        //centerCamera(player.x, player.y);
+         //karakterlerin hareket etmesi 'move(element)'
+        characters.forEach(element => move(element));
+        charAdd(players, characters, cities);        
+        /*for (let i in characters){fovCompute(characters[i])};*/
         fovCompute(player);
         foot.innerText = "";
         if(_location.presence.options){buttonAdd(foot, _location.presence)};
     };
+    
     
     let freeCells = [];
     let players = [];
@@ -50,15 +50,15 @@ let Game = function(){
         //display.DEBUG(x, y);
         });
     //================================karakterler======================
-    let player = new Person(null, null, "@","yellow", "red", players);
-    let portal = new Person(null, null, "€","white", "green", characters);
-    for (let i = 0; i< 130; i++){let _ = new Person(null, null, "T", "black", "white", characters) };
+    let player = Person(null, null, "@","yellow", "red", players);store(player);
+    let portal = Person(null, null, "€","white", "green", characters);store(portal);
+    for (let i = 0; i< 2; i++){let _ = Person(null, null, "T", "black", "white", characters); store(_) };
 
     //cityAdd(cities);
-    let mortal = new City(5, 3,"pink", "black",cities);
-    let medDark = new City(15, 16,"pink", "navy",cities);
-    let light = new City(19, 22, "white", "green", cities);
-    let mediumLight = new City(24, 23, "grey", "green", cities);
+    let mortal = City(5, 3,"pink", "black",cities); store(mortal);
+    let medDark = City(15, 16,"pink", "navy",cities);store(medDark);
+    let light = City(19, 22, "white", "green", cities);store(light);
+    let mediumLight = City(24, 23, "grey", "green", cities);store(mediumLight);
 
     cityAdd(map, cities);
 
@@ -131,5 +131,5 @@ let Game = function(){
 
 
 
-return {getRandom, isPassible, init, map, portal:portal, mortal:mortal, players:players, cities:cities, characters:characters}
+return {getRandom, isPassible, init, map, players, cities, characters};
 }();
