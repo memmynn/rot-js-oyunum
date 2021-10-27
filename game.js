@@ -8,7 +8,7 @@ let Game = function(){
         _location = map[(player.x +","+ player.y)];
         display.clear();
          //karakterlerin hareket etmesi 'move(element)'
-        characters.forEach(element => move(element));
+        characters.forEach(element => element.move());
         charAdd(players, characters, cities);        
         /*for (let i in characters){fovCompute(characters[i])};*/
         fovCompute(player);
