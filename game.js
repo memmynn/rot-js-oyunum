@@ -1,28 +1,25 @@
-//'use strict'
+'use strict'
 
 //=============================OYUN==========================
 let Game = function(){
 
-    //oyun işle
-    function init() {
-        _location = map[(player.x +","+ player.y)];
-        display.clear();
-         //karakterlerin hareket etmesi 'move(element)'
-        characters.forEach(element => element.move());
-        charAdd(players, characters, cities);        
-        /*for (let i in characters){fovCompute(characters[i])};*/
-        fovCompute(player);
-        foot.innerText = "";
-        if(_location.presence.options){buttonAdd(foot, _location.presence)};
-    };
-    
-    
     let freeCells = [];
     let players = [];
     let characters = [];
     let cities = [];
 //================================================OYUN BAŞLATMA========================================
-
+//oyun işle
+function init() {
+    let _location = map[(player.x +","+ player.y)];
+    display.clear();
+     //karakterlerin hareket etmesi 'move(element)'
+    characters.forEach(element => element.move());
+    charAdd(players, characters, cities);        
+    /*for (let i in characters){fovCompute(characters[i])};*/
+    fovCompute(player);
+    foot.innerText = "";
+    if(_location.presence.options){buttonAdd(foot, _location.presence)};
+};
 //========================================DÜNYA==============================================================
 
     let displayOptions = {

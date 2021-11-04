@@ -1,4 +1,4 @@
-//'use strict'
+'use strict'
 
 //haritadaki karakter sınıfı
 const Character = (x=0, y=0, storArray=[] ) => {
@@ -9,15 +9,31 @@ const Character = (x=0, y=0, storArray=[] ) => {
 const City = (x, y, fg, bg, storArray) => {
     const prototype = Character(x, y, storArray);
     const ch="C";
-    const options = [
-        {title : "Kingdom Hall",
-        functionality: function(){buttonAdd(foot, options)},
-        options : [{title : "bring back my daughter",
-                    functionality : ""}],
-        },
-        {title : "Inn",
-        functionality : buttonAdd(foot, this)},
-        ];
+    let options = 
+        [function () {
+            let _this ={ 
+                title :"Kingdom Hall",
+                functionality: function (){
+                    buttonAdd(foot, _this)},
+                options : [function() {
+                    let _this = {title : "bring back my daughter",
+                    functionality : ""};
+                    return _this;
+                    },
+                    ],
+                };
+            return _this;
+            },
+        function () {
+            let _this ={
+            title : "Inn",
+            functionality : function(){
+                buttonAdd(foot, _this)},
+            };
+        return _this;
+        
+    }];
+
     return Object.assign({}, prototype, {ch, fg, bg, options});
 };
 
@@ -26,9 +42,9 @@ const Person = (x, y, ch, fg, bg, storArray) => {
     
     const actions = ["moveRight" ,"moveLeft", "moveUp", "moveDown", "moveUL", "moveDL", "MoveUR", "moveDR"];
 
-    let element = Object.assign({}, prototype, {ch, fg, bg, actions});
+    let element = Object.assign({}, prototype, {ch, fg, bg, actions},{move});
     
-    return Object.assign(element, {move});
+    return element;
     //move hareket fonksiyonu
     function move () {
 

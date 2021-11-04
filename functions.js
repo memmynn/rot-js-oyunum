@@ -1,5 +1,5 @@
+'use strict'
 //array'den random item alma
-
 function getRandom(array){
     return Math.floor(Math.random()*array.length)
 };
@@ -17,9 +17,11 @@ function getRandEl(array){
     function buttonAdd(domEl, ch){
         domEl.innerText = ""; //document element'in temizlenmesi
         //if(ch.presence){//presence varsa presence'ın opsiyonları düğme olarak eklenir
-        for (let option in ch.options){ let buton = document.createElement("button"); 
-        buton.innerText = ch.options[option].title; 
-        buton.onclick = ch.options[option].functionality;
+        for (let option in ch.options){ 
+        let buton = document.createElement("button"); 
+        let _ch = ch.options[option]();
+        buton.innerText = _ch.title; 
+        buton.onclick = _ch.functionality;
         domEl.append(buton);
         };
                
