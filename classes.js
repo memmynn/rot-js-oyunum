@@ -10,29 +10,22 @@ const City = (x, y, fg, bg, storArray) => {
     const prototype = Character(x, y, storArray);
     const ch="C";
     let options = 
-        [function () {
-            let _this ={ 
+        [       
+            { 
                 title :"Kingdom Hall",
                 functionality: function (){
                     buttonAdd(foot, _this)},
-                options : [function() {
-                    let _this = {title : "bring back my daughter",
-                    functionality : ""};
-                    return _this;
-                    },
+                options : [
+                    {title : "bring back my daughter",
+                    functionality : ""},
                     ],
-                };
-            return _this;
             },
-        function () {
-            let _this ={
+        {
             title : "Inn",
             functionality : function(){
-                buttonAdd(foot, _this)},
-            };
-        return _this;
-        
-    }];
+                buttonAdd(foot, _this)},        
+        }
+    ];
 
     return Object.assign({}, prototype, {ch, fg, bg, options});
 };

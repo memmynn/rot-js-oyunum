@@ -19,13 +19,18 @@ function getRandEl(array){
         //if(ch.presence){//presence varsa presence'ın opsiyonları düğme olarak eklenir
         for (let option in ch.options){ 
         let buton = document.createElement("button"); 
-        let _ch = ch.options[option]();
-        buton.innerText = _ch.title; 
-        buton.onclick = _ch.functionality;
+        let _this = ch.options[option]();
+        buton.innerText = _this.title; 
+        buton.onclick = _this.functionality;
         domEl.append(buton);
         };
                
     };
+
+    //objeyi dönüştürme
+    function objify (_this) {
+        return _this;
+        };
 
     //haritadaki şehirleri "0" değerine ayarla parametreler x, y, value
     function cityAdd(map, arrays){
