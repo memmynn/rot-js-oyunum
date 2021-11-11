@@ -25,6 +25,8 @@ const dialogify = function (subj = 0, status = 0, sex = 0, age = 0, psychology =
             ],
         ];
         
-        let dialogue = _dialogues[subj][status][sex][age][psychology];
-        return Object.assign({}, dialogue[0], dialogue[1]);
+        let dialogue = getRandEl(_dialogues[subj][status][sex][age][psychology][0]);
+
+        let dialogueObj = _dialogues[subj][status][sex][age][psychology][1];
+        return Object.assign({}, {dialogue}, dialogueObj);
     };
