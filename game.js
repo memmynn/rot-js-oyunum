@@ -18,7 +18,7 @@ function init() {
     /*for (let i in characters){fovCompute(characters[i])};*/
     fovCompute(player);
     foot.innerText = "";
-    if(_location.presence.options){buttonAdd(foot, _location.presence)};
+    if(_location.presence.length > 1){buttonAdd(foot, _location.presence[1])};
 };
 //========================================DÜNYA==============================================================
 
@@ -40,16 +40,16 @@ function init() {
     displayDiv.append(display.getContainer());
     let foot = document.getElementById('foot');
     //==============================================================================
-    let map = new ROT.Map.Cellular(70, 55).randomize(0.1);//rastgele 'randomize' coğrafya çıkarma
+    let map = new ROT.Map.Cellular(70, 55).randomize(0.4);//rastgele 'randomize' coğrafya çıkarma
     map.create(function(x, y, type) {
         //map[x+","+y] = (type === 0 ? {ch:".", bg: "grey", fg: "white", isPassible: true}:{ch:"#", bg: "black"}); //haritaya "cell"'a göre "ch" verme
-        if(type === 0) {freeCells.push({"x":x, "y":y})};
+        if(type === 0) {freeCells.push({x, y})};
         //display.DEBUG(x, y);
         });
     //================================karakterler======================
     let player = Person(null, null, "@","yellow", "red", players);store(player);
     let portal = Person(null, null, "€","white", "green", characters);store(portal);
-    for (let i = 0; i< 2; i++){let _ = Person(null, null, "T", "black", "white", characters); store(_) };
+    for (let i = 0; i< 10; i++){let _ = Person(null, null, "T", "black", "white", characters); store(_) };
 
     //cityAdd(cities);
     let mortal = City(5, 3,"pink", "black",cities); store(mortal);
@@ -84,12 +84,12 @@ function init() {
 
     //output callback
     function fovCompute(char) {
-            fov.compute(char.x, char.y, 5, function(x, y, r, visibility) {
+            fov.compute(char.x, char.y, 8, function(x, y, r, visibility) {
             if (x < map._width && y < map._height && x > -1 && y > -1){//harita içinde olup olmadığı kontrolü
-                let ch = (map[x+","+y].presence && map[x+","+y].presence.ch ? map[x+","+y].presence.ch : map[x+","+y].ch); //presence varsa presence'ın ch'si, yoksa haritanın ch'si
+                let ch = (map[x+","+y].presence && map[x+","+y].presence.length >0 && map[x+","+y].presence[0].ch ? map[x+","+y].presence[0].ch : map[x+","+y].ch); //presence varsa presence'ın ch'si, yoksa haritanın ch'si
                 map[x+","+y].seen = true; //eğer r ise haritadaki nokta görünmüş oluyor
-                let fg = (map[x+","+y].presence && map[x+","+y].presence.fg ? map[x+","+y].presence.fg : map[x+","+y].fg);//presence varsa ve presence'ın fg rengi varsa, yoksa haritanın fg rengi, en sonunda char'ın fg rengi
-                let color = map[x+","+y].presence && map[x+","+y].presence.bg ? map[x+","+y].presence.bg : map[x+","+y].bg;//presence varsa ve presence'ın bg rengi varsa, yoksa haritanın bg rengi, en sonunda char'ın bg rengi
+                let fg = (map[x+","+y].presence && map[x+","+y].presence.length >0 && map[x+","+y].presence[0].fg ? map[x+","+y].presence[0].fg : map[x+","+y].fg);//presence varsa ve presence'ın fg rengi varsa, yoksa haritanın fg rengi, en sonunda char'ın fg rengi
+                let color = map[x+","+y].presence && map[x+","+y].presence.length >0 && map[x+","+y].presence[0].bg ? map[x+","+y].presence[0].bg : map[x+","+y].bg;//presence varsa ve presence'ın bg rengi varsa, yoksa haritanın bg rengi, en sonunda char'ın bg rengi
                 
                 drawScreen(x, y, ch, fg, color);
                 /*display.draw(x, y, ch, fg, color)*/

@@ -1,6 +1,6 @@
 'use strict';
 
-const dialogify = function (subj = 0, status = 0, sex = 0, age = 0, psychology = 0) {//subj= 0: selamlar, 1: muhabbet, 2:quests, 3: hoşçakal
+const dialogify = function (talker, talkee, subj = 0) {//subj= 0: selamlar, 1: muhabbet, 2:quests, 3: hoşçakal
                                 //status = 0: köylü, 10:soylu, 
                                 //sex = 0: erkek, 1: kadın, 
                                 //age = 0: 0-5, 1: 6-13, 2: 14-18, 3: 18-30, 4:31-40, 5: 41-58, 6:59-72, 7:73++
@@ -15,8 +15,8 @@ const dialogify = function (subj = 0, status = 0, sex = 0, age = 0, psychology =
                             "Hey idiot!",
                             "I don't like ya!"],
                             {next: 1,
-                                func: function name(params) {
-                                    
+                                func: function name() {
+                                    subj = 1;
                                 },}
                             ],
                         ],
@@ -25,8 +25,18 @@ const dialogify = function (subj = 0, status = 0, sex = 0, age = 0, psychology =
             ],
         ];
         
-        let dialogue = getRandEl(_dialogues[subj][status][sex][age][psychology][0]);
+        let dialogue = getRandEl(_dialogues[subj][talkee.status][talkee.sex][talkee.age][talkee.psychology][0]);
 
-        let dialogueObj = _dialogues[subj][status][sex][age][psychology][1];
-        return Object.assign({}, {dialogue}, dialogueObj);
+        let dialogueObj = _dialogues[subj][talkee.status][talkee.sex][talkee.age][talkee.psychology][1];
+        dialogueObj.func();
+        let dia = Object.assign({}, {dialogue}, dialogueObj);
+        if (Object.keys({talker} === "player")){//talker oyuncu (player) ise
+            return textAdd(foot, dia.dialogue);
+        };
+        
+        //
+        return dia;
     };
+
+
+//const questify;

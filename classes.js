@@ -1,14 +1,14 @@
 'use strict'
 
 //haritadaki karakter sınıfı
-const Character = (x=0, y=0, storArray=[] ) => {
+const Character = (x=0, y=0, storArray=[] ) => {//x ve y konumu, storArray ise yaratıldıktan sonra store edilecek array
     
-    return{x, y, storArray};
+    return {x, y, storArray};
 };
 
 const City = (x, y, fg, bg, storArray) => {
     const prototype = Character(x, y, storArray);
-    const ch="C";
+    const ch="C"; //default ch sembolü C
     let options = 
         [       
             { 
@@ -35,9 +35,30 @@ const Person = (x, y, ch, fg, bg, storArray) => {
     
     const actions = ["moveRight" ,"moveLeft", "moveUp", "moveDown", "moveUL", "moveDL", "MoveUR", "moveDR"];
 
-    let element = Object.assign({}, prototype, {ch, fg, bg, actions},{move});
+    let status= 0, sex= 0, age= 0, psychology= 0;
+
+    let element = Object.assign({}, prototype, {ch, fg, bg, actions, status, sex, age, psychology},{move});
     
-    return element;
+   let options =  [     
+        { 
+                title :"Talk",
+                functionality: function () {
+                   return dialogify(player, element)
+                },
+                options : [
+                    {title : "bring back my daughter",
+                    functionality : ""},
+                    ],
+            },
+        {
+            title : "Attack",
+            functionality : function(){
+                buttonAdd(foot, _this)},        
+        }
+    ];
+
+    return Object.assign(element, {options});
+
     //move hareket fonksiyonu
     function move () {
 
